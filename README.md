@@ -53,7 +53,7 @@ class or interface.
 
 Let's try to add one more type of notification (for example SMS)
 
-```
+``` Kotlin
 enum class Notification {
     PUSH_NOTIFICATION, EMAIL //Try to add element in enum like SMS
 }
@@ -207,4 +207,92 @@ In this situation we shouldn't inherit. Each class is another entity.
 
 **Interface segregation priciple**
 
-next...
+We have this situation:
+
+```Kotlin
+interface AdvancedMediaPlayer {
+    fun playVlc(fileName: String)
+    fun playMp4(fileName: String)
+}
+
+class VlcPlayer : AdvancedMediaPlayer {
+    override fun playVlc(fileName: String) {
+        println("Playing vlc file. Name: $fileName")
+    }
+
+    override fun playMp4(fileName: String) {
+        //do nothing
+    }
+}
+
+class Mp4Player : AdvancedMediaPlayer {
+    override fun playVlc(fileName: String) {
+        //do nothing
+    }
+
+    override fun playMp4(fileName: String) {
+        println("Playing mp4 file. Name: $fileName")
+    }
+}
+```
+We can't add different methods to the one interface. Resolve this problem:
+```Kotlin
+interface AdvancedMediaPlayerMP4 {
+    fun playMp4(fileName: String)
+}
+
+interface AdvancedMediaPlayerVLC {
+    fun playVlc(fileName: String)
+}
+
+class VlcPlayer : AdvancedMediaPlayerVLC {
+    override fun playVlc(fileName: String) {
+        println("Playing vlc file. Name: $fileName")
+    }
+}
+
+class Mp4Player : AdvancedMediaPlayerMP4 {
+
+    override fun playMp4(fileName: String) {
+        println("Playing mp4 file. Name: $fileName")
+    }
+}
+```
+
+**Dependency inversion priciple**
+
+```Kotlin
+class SMSNotification {
+    fun send() {
+        // send sms notification
+    }
+}
+
+class NotificationService {
+
+    fun sendNotification(notification: SMSNotification) {
+        notification.send()
+    }
+}
+```
+So we can't to create dependency without abstraction. Then we need another realization. Code should be looks like:
+
+```Kotlin
+interface Notification{
+    fun send()
+}
+
+class SMSNotification : Notification {
+    override fun send() {
+        // send sms notification
+    }
+}
+
+class NotificationService {
+
+    fun sendNotification(notification: Notification) {
+        notification.send()
+    }
+}
+```
+
