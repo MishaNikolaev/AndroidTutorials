@@ -205,7 +205,7 @@ class SquareCalculator {
 In this situation we shouldn't inherit. Each class is another entity.
 
 
-**Interface segregation priciple**
+**Interface segregation principle**
 
 We have this situation:
 
